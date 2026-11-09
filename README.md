@@ -59,9 +59,14 @@ Relembrar que a função `pthread_cond_wait(&cond, &mutex)`:
 
 - quando a tarefa acorda, recupera o *mutex* e pode continuar a execução na secção crítica.
 
-8. Não se esqueça de adicionar a chamada à função [`pthread_cond_signal`](https://man7.org/linux/man-pages/man3/pthread_cond_signal.3p.html) no(s) local(is) onde a condição de espera seja modificada.
+Atenção: acordar não significa que a condição esteja satisfeita! 
+Por isso, a tarefa deve voltar a verificar a condição no ciclo e, se necessário, bloquear novamente.
 
-9. Compile o novo programa (com `make coordination_condvar`) e execute-o de novo usando o seguinte comando:  
+8. Não se esqueça de adicionar a chamada à função [`pthread_cond_signal`](https://man7.org/linux/man-pages/man3/pthread_cond_signal.3p.html)[^signal_ipc] nos locais onde a condição de espera seja modificada.
+
+[^signal_ipc]: `pthread_pcond_signal` serve para acordar uma **tarefa** que esteja à espera numa variável de condição, enquanto os sinais Unix (como `SIGINT` ou `SIGTERM`) são notificações assíncronas enviadas a **processos** para comunicar determinados eventos.
+
+10. Compile o novo programa (com `make coordination_condvar`) e execute-o de novo usando o seguinte comando:  
 `time ./coordination_condvar`
 
 O que mudou nos tempos reportados pelo comando `time` relativamente aos tempos reportados para a versão original?
